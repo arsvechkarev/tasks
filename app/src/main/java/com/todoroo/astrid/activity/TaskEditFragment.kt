@@ -16,19 +16,26 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.addTextChangedListener
@@ -84,13 +91,13 @@ import org.tasks.fragments.TaskEditControlSetFragmentManager.Companion.TAG_PRIOR
 import org.tasks.markdown.MarkdownProvider
 import org.tasks.notifications.NotificationManager
 import org.tasks.preferences.Preferences
+import org.tasks.themes.ColorProvider
 import org.tasks.ui.*
 import org.tasks.ui.TaskEditViewModel.Companion.stripCarriageReturns
 import java.time.format.FormatStyle
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
-import android.view.inputmethod.EditorInfo
 
 @AndroidEntryPoint
 class TaskEditFragment : Fragment(), Toolbar.OnMenuItemClickListener {
@@ -101,6 +108,7 @@ class TaskEditFragment : Fragment(), Toolbar.OnMenuItemClickListener {
     @Inject lateinit var context: Activity
     @Inject lateinit var taskEditControlSetFragmentManager: TaskEditControlSetFragmentManager
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var colorProvider: ColorProvider
     @Inject lateinit var firebase: Firebase
     @Inject lateinit var timerPlugin: TimerPlugin
     @Inject lateinit var linkify: Linkify
@@ -126,26 +134,10 @@ class TaskEditFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         val view: View = binding.root
         val model = editViewModel.task
         val toolbar = binding.toolbar
-        toolbar.navigationIcon = AppCompatResources.getDrawable(
-            context,
-            if (editViewModel.isReadOnly)
-                R.drawable.ic_outline_arrow_back_24px
-            else
-                R.drawable.ic_outline_save_24px
-        )
-        toolbar.setNavigationOnClickListener {
-            lifecycleScope.launch {
-                save()
-            }
-        }
+        toolbar.navigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_outline_arrow_back_24px)
+        toolbar.setNavigationOnClickListener { discardButtonClick() }
         val backButtonSavesTask = preferences.backButtonSavesTask()
-        toolbar.setNavigationContentDescription(
-            when {
-                editViewModel.isReadOnly -> R.string.back
-                backButtonSavesTask -> R.string.discard
-                else -> R.string.save
-            }
-        )
+        toolbar.setNavigationContentDescription(R.string.back)
         toolbar.inflateMenu(R.menu.menu_task_edit_fragment)
         val menu = toolbar.menu
         val delete = menu.findItem(R.id.menu_delete)
@@ -266,6 +258,22 @@ class TaskEditFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                     }
                     if (preferences.getBoolean(R.string.p_show_task_edit_comments, true)) {
                         Comments()
+                    }
+                    Button(
+                            onClick = { lifecycleScope.launch { save() } },
+                            modifier = Modifier
+                                    .padding(all = Dp(24F))
+                                    .align(alignment = Alignment.CenterHorizontally),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(
+                                    colorProvider
+                                            .getThemeAccent(
+                                                    preferences.getInt(
+                                                            R.string.p_theme_accent, 1
+                                                    ))
+                                            .accentColor
+                            ))
+                    ) {
+                        Text(text = "Save")
                     }
                 }
             }

@@ -43,40 +43,49 @@ public class SnoozeDialog extends DialogFragment {
 
     List<SnoozeOption> snoozeOptions = new ArrayList<>();
 
+    DateTime min5 = now.plusMinutes(5).withSecondOfMinute(0).withMillisOfSecond(0);
+    snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_5_min, min5));
+
+    DateTime min15 = now.plusMinutes(15).withSecondOfMinute(0).withMillisOfSecond(0);
+    snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_15_min, min15));
+
+    DateTime min30 = now.plusMinutes(30).withSecondOfMinute(0).withMillisOfSecond(0);
+    snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_30_min, min30));
+
     DateTime oneHour = now.plusHours(1).withSecondOfMinute(0).withMillisOfSecond(0);
     snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_hour, oneHour));
 
     if (morning.isAfter(hourCutoff)) {
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_morning, morning));
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_afternoon, afternoon));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_afternoon, afternoon));
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_evening, evening));
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
     } else if (afternoon.isAfter(hourCutoff)) {
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_afternoon, afternoon));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_afternoon, afternoon));
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_evening, evening));
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_tomorrow_morning, tomorrowMorning));
     } else if (evening.isAfter(hourCutoff)) {
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_evening, evening));
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_tomorrow_morning, tomorrowMorning));
-      snoozeOptions.add(
-          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
+//      snoozeOptions.add(
+//          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
     } else if (night.isAfter(hourCutoff)) {
-      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
+//      snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_night, night));
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_tomorrow_morning, tomorrowMorning));
-      snoozeOptions.add(
-          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
+//      snoozeOptions.add(
+//          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
       snoozeOptions.add(
           new SnoozeOption(R.string.date_shortcut_tomorrow_evening, tomorrowEvening));
     } else {
       snoozeOptions.add(new SnoozeOption(R.string.date_shortcut_tomorrow_morning, tomorrowMorning));
-      snoozeOptions.add(
-          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
+//      snoozeOptions.add(
+//          new SnoozeOption(R.string.date_shortcut_tomorrow_afternoon, tomorrowAfternoon));
       snoozeOptions.add(
           new SnoozeOption(R.string.date_shortcut_tomorrow_evening, tomorrowEvening));
-      snoozeOptions.add(
-          new SnoozeOption(R.string.date_shortcut_tomorrow_night, tomorrowNight));
+//      snoozeOptions.add(
+//          new SnoozeOption(R.string.date_shortcut_tomorrow_night, tomorrowNight));
     }
 
     return snoozeOptions;
